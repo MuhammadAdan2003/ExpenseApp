@@ -40,7 +40,9 @@ Route::get('/login', function () {
 Route::get('/addTrip', [TripController::class, 'index'])->name('viewFormTrip');
 Route::get('/trips', [TripController::class, 'trips'])->name('showtrips');
 Route::post('/trips', [TripController::class, 'store'])->name('tripstore');
-Route::get('/trip/{id}', [TripController::class, 'trip'])->name('trip');
+Route::get('/mytrip/{id}', [TripController::class, 'trip'])->name('myttrip');
+
+
 
 Route::post('/signup', [AuthController::class, 'register'])->name('signup');
 Route::post('/signin', [AuthController::class, 'login'])->name('loginn');

@@ -11,13 +11,13 @@ class TripController extends Controller
 
     public function trip($id)
     {
-        $trip = Trips::find($id);
-
-        return view('Users.User_pages.trip', compact('trip'));
+        $trip = Trips::findOrFail($id);
+        return view('Users.User_pages.thistrip', compact('trip'));
     }
+
+
     public function trips()
     {
-
         $trips = Trips::all();
 
         return view('Users.User_pages.trips', compact('trips'));
@@ -640,7 +640,6 @@ class TripController extends Controller
 
         return view('Users.User_pages.tripsForm', compact('countryList', 'currencyCode', 'Currency'));
     }
-
 
     public function store(Request $request)
     {

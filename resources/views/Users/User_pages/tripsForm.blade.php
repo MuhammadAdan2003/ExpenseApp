@@ -244,14 +244,8 @@
                         <option value="" disabled selected>Select Country</option>
                         @foreach ($countryList as $code => $name)
                             @php
-                                // Find the matching currency for this country
-                                $currencyCode = '';
-                                foreach ($Currency as $country => $curr) {
-                                    if (str_contains($country, explode(' ', $name)[0])) {
-                                        $currencyCode = $curr;
-                                        break;
-                                    }
-                                }
+                                // Check if the country exists in the Currency mapping
+                                $currencyCode = $Currency[$name] ?? '';
                             @endphp
                             <option value="{{ $name }}"
                                 data-flag="https://flagcdn.com/16x12/{{ strtolower($code) }}.png"

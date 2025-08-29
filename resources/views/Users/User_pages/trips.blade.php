@@ -12,15 +12,14 @@
             /* max-width: 1400px; */
             /* Adjust this value as needed */
             margin: 0 auto;
-            justify-items: baseline;
+            /* justify-items: baseline; */
             /* Centers the grid items horizontally */
         }
 
 
         /* Individual Trip Card */
         .trip-card {
-            /* width: 100%;
-                                                                                                                                                                                                                                                                                                                                                                                                max-width: 350px; */
+            /* max-width: 33%; */
             background: var(--dark-2);
             border-radius: 15px;
             overflow: hidden;
@@ -285,7 +284,6 @@
         </a>
     </div>
 
-
     <div class="trip-cards-container">
         <!-- Trip Card 1 -->
         @foreach ($trips as $trip)
@@ -294,11 +292,12 @@
                     <img src="{{ asset('assets/img/' . $trip['trip_image']) . '.jpeg' }} " alt="Mountain Adventure">
                     <div class="trip-overlay"></div>
                 </div>
+
                 <div class="trip-content">
                     <h3 class="trip-title">{{ $trip['trip_name'] }}</h3>
                     <p class="trip-description">
                         {{ $trip['description'] ? $trip['description'] : 'No Description has been added' }} </p>
-                    <a class="trip-button" href="{{ route('trip', ['id' => $trip['trip_id']]) }}">View Details</a>
+                    <a class="trip-button" href="{{ route('myttrip', ['id' => $trip['trip_id']]) }}">View Details</a>
 
                 </div>
             </div>
@@ -318,10 +317,10 @@
                     package.</p>
                 <button class="trip-button">View Details</button>
             </div>
-        </div>
+        </div> --}}
 
         <!-- Trip Card 3 -->
-        <div class="trip-card">
+        {{-- <div class="trip-card">
             <div class="trip-image">
                 <img src="https://images.unsplash.com/photo-1557296869-e9a76501a0d1?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                     alt="City Tour">
