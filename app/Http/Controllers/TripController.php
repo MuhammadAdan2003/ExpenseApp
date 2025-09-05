@@ -5,14 +5,18 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Trips;
 use Illuminate\Http\Request;
-
+use App\Models\Expenses; 
 class TripController extends Controller
 {
 
     public function trip($id)
     {
         $trip = Trips::findOrFail($id);
-        return view('Users.User_pages.thistrip', compact('trip'));
+        $tripExpenses = Expenses::where('trip_id', $id)
+                       ->where('user_id', auth()->id())
+                       ->get();
+
+        return view('Users.User_pages.thistrip', compact('trip' , 'tripExpenses'));
     }
 
 
@@ -662,6 +666,7 @@ class TripController extends Controller
             'start_date' => $validated['start_date'],
             'end_date' => $validated['end_date'],
             'budget' => $validated['budget'],
+            'remaining_budget' => $validated['budget'],
             'currency' => $validated['currency'],
             'trip_image' => $randomImage,
             'description' => $validated['description'] ?? null

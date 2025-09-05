@@ -16,6 +16,7 @@ class Trips extends Model
         'end_date',
         'destination',
         'budget',
+        'remaining_budget',
         'trip_image',
         'description'
     ];

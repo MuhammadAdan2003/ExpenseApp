@@ -360,6 +360,7 @@
         }
 
         /* Modal Styles */
+        /* Modal Styles */
         .modal {
             display: none;
             position: fixed;
@@ -367,19 +368,35 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
+            background-color: rgba(0, 0, 0, 0.85);
             z-index: 1000;
             align-items: center;
             justify-content: center;
+            backdrop-filter: blur(5px);
         }
 
         .modal-content {
             background: var(--dark-2);
-            border-radius: 10px;
+            border-radius: 12px;
             padding: 2rem;
             width: 90%;
             max-width: 500px;
-            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.5);
+            box-shadow: var(--neon-glow-accent), 0 0 50px rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--accent);
+            animation: pulse 2s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: var(--neon-glow-accent), 0 0 50px rgba(0, 0, 0, 0.8);
+            }
+
+            100% {
+                box-shadow: 0 0 20px rgba(247, 37, 133, 0.9),
+                    0 0 40px rgba(247, 37, 133, 0.6),
+                    0 0 60px rgba(247, 37, 133, 0.4),
+                    0 0 80px rgba(247, 37, 133, 0.2);
+            }
         }
 
         .modal-header {
@@ -387,19 +404,34 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--primary);
         }
 
         .modal-title {
-            color: var(--primary);
-            font-size: 1.5rem;
+            color: var(--primary-light);
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-shadow: 0 0 10px var(--primary-light),
+                0 0 20px var(--primary-light),
+                0 0 30px var(--primary);
         }
 
         .close-btn {
             background: transparent;
             border: none;
             color: var(--text-light);
-            font-size: 1.5rem;
+            font-size: 2rem;
             cursor: pointer;
+            transition: all 0.3s ease;
+            text-shadow: 0 0 5px var(--accent);
+        }
+
+        .close-btn:hover {
+            color: var(--accent);
+            text-shadow: 0 0 10px var(--accent),
+                0 0 20px var(--accent);
+            transform: scale(1.1);
         }
 
         .form-group {
@@ -408,51 +440,231 @@
 
         .form-group label {
             display: block;
-            margin-bottom: 0.5rem;
-            color: var(--text-light);
+            margin-bottom: 0.8rem;
+            color: var(--primary-light);
+            font-weight: 600;
+            text-shadow: 0 0 5px var(--primary);
         }
 
         .form-group input,
         .form-group select,
         .form-group textarea {
             width: 100%;
-            padding: 0.8rem;
-            border-radius: 5px;
-            border: 1px solid var(--dark-3);
-            background-color: var(--dark);
+            padding: 1rem;
+            border-radius: 8px;
+            border: 2px solid var(--primary);
+            background-color: var(--dark-3);
             color: var(--text-light);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(67, 97, 238, 0.3);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 15px var(--accent);
         }
 
         .form-actions {
             display: flex;
             justify-content: flex-end;
             gap: 1rem;
-            margin-top: 1rem;
+            margin-top: 2rem;
         }
 
+        .action-btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .primary-btn {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 0 10px var(--primary),
+                0 0 20px rgba(67, 97, 238, 0.5);
+        }
+
+        .primary-btn:hover {
+            background: var(--primary-light);
+            box-shadow: 0 0 15px var(--primary-light),
+                0 0 25px rgba(76, 201, 240, 0.7);
+            transform: translateY(-2px);
+        }
+
+        .secondary-btn {
+            background: transparent;
+            color: var(--text-light);
+            border: 2px solid var(--secondary);
+            box-shadow: 0 0 10px var(--secondary);
+        }
+
+        .secondary-btn:hover {
+            background: var(--secondary);
+            box-shadow: 0 0 15px var(--secondary),
+                0 0 25px rgba(114, 9, 183, 0.7);
+            transform: translateY(-2px);
+        }
+
+        /* Expense Section Styles */
+        .expense-section {
+            margin-top: 3rem;
+            padding: 2rem;
+            background: var(--dark-2);
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(67, 97, 238, 0.3);
+            border: 1px solid var(--primary);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--primary);
+        }
+
+        .section-title {
+            color: var(--primary-light);
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-shadow: 0 0 10px var(--primary);
+        }
+
+        .section-title i {
+            margin-right: 10px;
+            color: var(--accent);
+            text-shadow: 0 0 10px var(--accent);
+        }
+
+        .add-expense-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .add-expense-btn:hover {
+            background: var(--primary-light);
+            box-shadow: 0 0 15px var(--primary-light),
+                0 0 25px rgba(76, 201, 240, 0.7);
+            transform: translateY(-2px);
+        }
+
+        /* Expense Table Styles */
+        .expense-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 2rem;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(67, 97, 238, 0.3);
+        }
+
+        .expense-table th {
+            background: var(--primary-dark);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            text-shadow: 0 0 5px var(--primary-light);
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .expense-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--dark-3);
+            background: var(--dark-2);
+        }
+
+        .expense-table tr:hover td {
+            background: var(--dark-3);
+        }
+
+        .expense-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .action-cell {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .edit-btn,
+        .delete-btn {
+            padding: 0.5rem;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: transparent;
+        }
+
+        .edit-btn {
+            color: var(--primary-light);
+        }
+
+        .edit-btn:hover {
+            color: var(--primary);
+            text-shadow: 0 0 10px var(--primary);
+            transform: scale(1.1);
+        }
+
+        .delete-btn {
+            color: var(--accent);
+        }
+
+        .delete-btn:hover {
+            color: var(--error);
+            text-shadow: 0 0 10px var(--error);
+            transform: scale(1.1);
+        }
+
+        /* Expense Summary Styles */
+        .expense-summary {
+            display: flex;
+            justify-content: space-between;
+            padding: 1.5rem;
+            background: var(--dark-3);
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(67, 97, 238, 0.2);
+            border: 1px solid var(--primary);
+        }
+
+        .total-expenses,
+        .remaining-budget {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .total-expenses {
+            color: var(--accent);
+            text-shadow: 0 0 5px var(--accent);
+        }
+
+        .remaining-budget {
+            color: var(--primary-light);
+            text-shadow: 0 0 5px var(--primary-light);
+        }
+
+        /* Responsive Styles */
         @media (max-width: 768px) {
-            .trip-details-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .action-buttons {
-                flex-direction: column;
-            }
-
-            .action-btn {
-                width: 100%;
-                justify-content: center;
-            }
-
-            .trip-title h1 {
-                font-size: 2rem;
-            }
-
-            .expense-table {
-                display: block;
-                overflow-x: auto;
-            }
-
             .section-header {
                 flex-direction: column;
                 align-items: flex-start;
@@ -462,6 +674,19 @@
             .expense-summary {
                 flex-direction: column;
                 gap: 1rem;
+            }
+
+            .expense-table {
+                display: block;
+                overflow-x: auto;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .action-btn {
+                width: 100%;
             }
         }
 
@@ -622,24 +847,34 @@
                 <h3>💰 Budget in {{ Auth::user()->user_currency }}</h3>
                 <div class="detail-content">
                     <div class="budget-display">{{ $trip->budget . ' ' . Auth::user()->user_currency }}</div>
-                    <p>Total budget for this trip</p>
+                    {{-- <p>Total budget for this local</p> --}}
                 </div>
             </div>
             <div class="detail-card">
                 <h3>💰 Budget in {{ $trip->currency }}</h3>
                 <div class="detail-content">
-                    <div id="converted" class="budget-display">{{ $trip->budget . ' ' . Auth::user()->user_currency }}</div>
-                    <p>Total budget for this trip</p>
+                    <div id="converted" class="budget-display converted">
+                        {{ $trip->budget . ' ' . Auth::user()->user_currency }}</div>
+                    {{-- <p>Total budget for this trip</p> --}}
+                </div>
+            </div>
+            <div class="detail-card">
+                <h3>💰 Remaining budget</h3>
+                <div class="detail-content">
+                    <div id="changeRemain" class="budget-display">{{ $trip->budget . ' ' . Auth::user()->user_currency }}</div>
+                </div>
+                <div class="detail-content">
+                    <div class="budget-display converted">{{ $trip->budget . ' ' . $trip->currency }}</div>
                 </div>
             </div>
         </div>
         <!-- Expense Section -->
         <div class="expense-section">
             <div class="section-header">
-                <h3 class="section-title"><i class="fas fa-receipt"></i> Expense Tracker</h3>
-                <button class="add-expense-btn" id="addExpenseBtn">
+                <h3 class="section-title" style="text-align: center;"><i class="fas fa-receipt"></i> Expenses </h3>
+                {{-- <button class="add-expense-btn" id="addExpenseBtn">
                     <i class="fas fa-plus"></i> Add Expense
-                </button>
+                </button> --}}
             </div>
 
             <table class="expense-table">
@@ -653,7 +888,30 @@
                     </tr>
                 </thead>
                 <tbody id="expenseTableBody">
+                    <tr id="loaderRow">
+                        <td colspan="3" class="text-center">
+                            Loading...
+                        </td>
+                    </tr>
                     <!-- Expenses will be added here dynamically -->
+
+                    {{-- @foreach ($tripExpenses as $exp)
+                        <tr>
+                            <td>{{ $exp->expense_date }}</td>
+                            <td>{{ $exp->category }}</td>
+                            <td>{{ $exp->notes }}</td>
+                            <td>{{ $exp->amount }}</td>
+                            <td>{{ $exp->amount }}</td>
+                            <td class="action-cell">
+                                <button class="edit-btn" data-id="${expense.id}">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="delete-btn" data-id="${expense.id}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    @endforeach --}}
                 </tbody>
             </table>
 
@@ -705,11 +963,11 @@
                 <input type="hidden" id="expenseId">
                 <div class="form-group">
                     <label for="expenseDate">Date</label>
-                    <input type="date" id="expenseDate" required>
+                    <input name="expense_date" type="date" id="expenseDate" required>
                 </div>
                 <div class="form-group">
                     <label for="expenseCategory">Category</label>
-                    <select id="expenseCategory" required>
+                    <select name="category" id="expenseCategory" required>
                         <option value="">Select Category</option>
                         <option value="Accommodation">Accommodation</option>
                         <option value="Transportation">Transportation</option>
@@ -721,12 +979,13 @@
                 </div>
                 <div class="form-group">
                     <label for="expenseDescription">Description</label>
-                    <input type="text" id="expenseDescription" required>
+                    <input name="notes" type="text" id="expenseDescription" required>
                 </div>
                 <div class="form-group">
-                    <label for="expenseAmount">Amount (USD)</label>
-                    <input type="number" id="expenseAmount" min="0" step="0.01" required>
+                    <label for="expenseAmount">Amount in {{ $trip->currency }}</label>
+                    <input name="amount" type="number" id="expenseAmount" min="0" step="0.01" required>
                 </div>
+                <input type="hidden" value="{{ $trip->trip_id }}" name="trip_id">
                 <div class="form-actions">
                     <button type="button" class="action-btn secondary-btn" id="cancelExpense">Cancel</button>
                     <button type="submit" class="action-btn primary-btn">Save Expense</button>
@@ -795,48 +1054,104 @@
             remainingBudgetElement.textContent = formatCurrency(TOTAL_BUDGET - total);
         }
 
+
+
         // Render expenses table
-        function renderExpenses() {
-            expenseTableBody.innerHTML = '';
+        // function renderExpenses() {
+        //     expenseTableBody.innerHTML = '';
 
-            expenses.forEach(expense => {
-                const row = document.createElement('tr');
+        //     expenses.forEach(expense => {
+        //         const row = document.createElement('tr');
 
-                row.innerHTML = `
-                    <td>${new Date(expense.date).toLocaleDateString()}</td>
-                    <td>${expense.category}</td>
-                    <td>${expense.description}</td>
-                    <td>${formatCurrency(expense.amount)}</td>
-                    <td class="action-cell">
-                        <button class="edit-btn" data-id="${expense.id}">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="delete-btn" data-id="${expense.id}">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </td>
-                `;
+        //         row.innerHTML = `
+    //             <td>${new Date(expense.date).toLocaleDateString()}</td>
+    //             <td>${expense.category}</td>
+    //             <td>${expense.description}</td>
+    //             <td>${formatCurrency(expense.amount)}</td>
+    //             <td class="action-cell">
+    //                 <button class="edit-btn" data-id="${expense.id}">
+    //                     <i class="fas fa-edit"></i>
+    //                 </button>
+    //                 <button class="delete-btn" data-id="${expense.id}">
+    //                     <i class="fas fa-trash"></i>
+    //                 </button>
+    //             </td>
+    //         `;
 
-                expenseTableBody.appendChild(row);
-            });
+        //         expenseTableBody.appendChild(row);
+        //     });
 
-            // Add event listeners to edit and delete buttons
-            document.querySelectorAll('.edit-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const id = parseInt(e.currentTarget.getAttribute('data-id'));
-                    editExpense(id);
+        //     // Add event listeners to edit and delete buttons
+        //     document.querySelectorAll('.edit-btn').forEach(btn => {
+        //         btn.addEventListener('click', (e) => {
+        //             const id = parseInt(e.currentTarget.getAttribute('data-id'));
+        //             editExpense(id);
+        //         });
+        //     });
+
+        //     document.querySelectorAll('.delete-btn').forEach(btn => {
+        //         btn.addEventListener('click', (e) => {
+        //             const id = parseInt(e.currentTarget.getAttribute('data-id'));
+        //             deleteExpense(id);
+        //         });
+        //     });
+
+        //     updateTotals();
+        // }
+
+
+        // load expense with api 
+       function loadExpenses() {
+    const expenseTableBody = $("#expenseTableBody");
+    let tripID = "{{ $trip->trip_id }}"; // Blade variable
+
+    // Show loader row inside tbody
+    expenseTableBody.html(`
+        <tr>
+            <td colspan="5" class="text-center">Loading...</td>
+        </tr>
+    `);
+
+    $.ajax({
+        url: "/getExp/" + tripID, // ✅ trip_id pass in URL
+        type: "GET",
+        success: function(data) {
+            expenseTableBody.empty(); // clear loader
+
+            if (data.success && data.expenses.length > 0) {
+                data.expenses.reverse().forEach(function(expense) {
+                    let row = `
+                        <tr>
+                            <td>${new Date(expense.expense_date).toLocaleDateString()}</td>
+                            <td>${expense.category}</td>
+                            <td>${expense.notes ?? '-'}</td>
+                            <td>${Number(expense.amount).toFixed(2)}</td>
+                            <td class="action-cell">
+                                <button class="edit-btn" data-id="${expense.expense_id}">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="delete-btn" data-id="${expense.expense_id}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                    expenseTableBody.append(row);
                 });
-            });
-
-            document.querySelectorAll('.delete-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const id = parseInt(e.currentTarget.getAttribute('data-id'));
-                    deleteExpense(id);
-                });
-            });
-
-            updateTotals();
+            } else {
+                expenseTableBody.html('<tr><td colspan="5" class="text-center">No expenses found</td></tr>');
+            }
+        },
+        error: function() {
+            expenseTableBody.html('<tr><td colspan="5" class="text-center text-danger">Error loading expenses</td></tr>');
         }
+    });
+}
+
+// ✅ Call on page load
+$(document).ready(function() {
+    loadExpenses();
+});
 
         // Open modal for adding new expense
         function openAddModal() {
@@ -970,8 +1285,11 @@
 
                 console.log(`Budget in ${tripCurrency}: ${convertedBudget}`);
 
-                document.querySelector('#converted').textContent = convertedBudget + ' ' + tripCurrency
+                let elem = document.querySelectorAll('.converted');
 
+                elem.forEach(el => {
+                    el.textContent = convertedBudget + ' ' + tripCurrency;
+                });
             })
             .catch(error => console.error(error));
     </script>
@@ -986,6 +1304,48 @@
             btn.addEventListener('click', function() {
                 const action = this.textContent.trim();
                 alert(`Action: ${action}`);
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $('#expenseForm').on('submit', function(e) {
+                e.preventDefault(); // prevent default form submit
+
+                $.ajax({
+                    url: "{{ route('addingExp') }}", // your API endpoint
+                    type: "POST",
+                    data: $(this).serialize(), // serialize form data
+                    headers: {
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}" // only needed if hitting web.php, not api.php
+                    },
+                    success: function(response) {
+                        $('#responseMessage').html(
+                            `<p style="color:green;">${response.message}</p>`
+                        );
+                        console.log("Expense added:", response.data);
+                        $('#expenseForm')[0].reset(); // clear form
+                        expenseModal.style.display = 'none'
+                        loadExpenses();
+                        $('#changeRemain').text(response.remaining_budget);    
+                    },
+                    error: function(xhr) {
+                        let res = xhr.responseJSON;
+                        if (res && res.errors) {
+                            let errorHtml = "<ul style='color:red;'>";
+                            $.each(res.errors, function(key, value) {
+                                errorHtml += `<li>${value[0]}</li>`;
+                            });
+                            errorHtml += "</ul>";
+                            $('#responseMessage').html(errorHtml);
+                        } else {
+                            $('#responseMessage').html(
+                                `<p style="color:red;">${res.message || 'Something went wrong'}</p>`
+                            );
+                        }
+                    }
+                });
             });
         });
     </script>

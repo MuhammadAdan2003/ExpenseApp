@@ -38,7 +38,7 @@
                         <a class="nav-link active" href="#"><i class="fas fa-home me-1"></i> Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="fas fa-wallet me-1"></i> Expenses</a>
+                        <a class="nav-link" href="{{ route('showtrips') }}"><i class="fas fa-wallet me-1"></i> Trips</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#"><i class="fas fa-chart-line me-1"></i> Reports</a>
@@ -85,13 +85,13 @@
             <div class="d-flex flex-column mt-4 flex-shrink-0 p-3 h-100">
                 <ul class="nav nav-pills flex-column mb-auto">
                     <li class="nav-item">
-                        <a href="#" class="nav-link active">
+                        <a href="{{ route('dashboard') }}" class="nav-link active">
                             <i class="fas fa-tachometer-alt me-2"></i>
                             Dashboard
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="nav-link text-light">
+                        <a href="{{ route('showtrips') }}" class="nav-link text-light ">
                             <i class="fas fa-wallet me-2"></i>
                             Trips
                         </a>
