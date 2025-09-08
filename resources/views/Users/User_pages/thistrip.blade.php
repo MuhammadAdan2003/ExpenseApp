@@ -1,6 +1,8 @@
 @extends('Users.user_layout.userlayout')
 
 @section('style')
+ {{-- <link rel="stylesheet" href="assets/css/toastr.css"> --}}
+
     <style>
         :root {
             --primary: #4361ee;
@@ -381,21 +383,21 @@
             padding: 2rem;
             width: 90%;
             max-width: 500px;
-            box-shadow: var(--neon-glow-accent), 0 0 50px rgba(0, 0, 0, 0.8);
-            border: 1px solid var(--accent);
+            box-shadow: var(--neon-glow), 0 0 50px rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--neon-glow);
             animation: pulse 2s infinite alternate;
         }
 
         @keyframes pulse {
             0% {
-                box-shadow: var(--neon-glow-accent), 0 0 50px rgba(0, 0, 0, 0.8);
+                box-shadow: var(--neon-glow), 0 0 50px rgba(0, 0, 0, 0.8);
             }
 
             100% {
-                box-shadow: 0 0 20px rgba(247, 37, 133, 0.9),
-                    0 0 40px rgba(247, 37, 133, 0.6),
-                    0 0 60px rgba(247, 37, 133, 0.4),
-                    0 0 80px rgba(247, 37, 133, 0.2);
+                box-shadow: 0 0 20px rgba(67, 97, 238, 0.8),
+                0 0 30px rgba(67, 97, 238, 0.6),
+                0 0 45px rgba(67, 97, 238, 0.4),
+                0 0 60px rgba(67, 97, 238, 0.2);
             }
         }
 
@@ -464,8 +466,8 @@
         .form-group select:focus,
         .form-group textarea:focus {
             outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 15px var(--accent);
+            border-color: var(--primary-light);
+            box-shadow: 0 0 15px var(--primary-light);
         }
 
         .form-actions {
@@ -787,6 +789,8 @@
             width: 100%;
             padding: 0 32px;
         }
+
+        /* ============= NEW MODAL CSS ===========  */
     </style>
 @endsection
 
@@ -889,7 +893,7 @@
                 </thead>
                 <tbody id="expenseTableBody">
                     <tr id="loaderRow">
-                        <td colspan="3" class="text-center">
+                        <td colspan="5" class="text-center">
                             Loading...
                         </td>
                     </tr>
@@ -988,14 +992,42 @@
                 <input type="hidden" value="{{ $trip->trip_id }}" name="trip_id">
                 <div class="form-actions">
                     <button type="button" class="action-btn secondary-btn" id="cancelExpense">Cancel</button>
-                    <button type="submit" class="action-btn primary-btn">Save Expense</button>
+                    <button type="submit" id="saveExp" class="action-btn primary-btn">Add Expense</button>
                 </div>
             </form>
         </div>
     </div>
+
+    {{-- Delete modal  --}}
+     <!-- Delete Confirmation Modal -->
+        <div class="modal" id="deleteModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Confirm Deletion</h3>
+                    <button class="close-btn" id="closeDeleteModal">&times;</button>
+                </div>
+                <div class="delete-modal-content">
+                    <div class="delete-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <p class="delete-message">Are you sure you want to delete this expense? This action cannot be undone.</p>                    
+                    <div class="form-actions">
+                        <button type="button" class="action-btn secondary-btn" id="cancelDelete">Cancel</button>
+                        <button type="button" class="action-btn danger-btn" id="confirmDelete">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('bottomScriptsCustom')
+{{-- <script src="assets/js/toastr.js"></script> --}}
     <script>
+         
+        const toastr = new Toastr();
+
         // Sample expense data
         let expenses = [{
                 id: 1,
@@ -1054,52 +1086,6 @@
             remainingBudgetElement.textContent = formatCurrency(TOTAL_BUDGET - total);
         }
 
-
-
-        // Render expenses table
-        // function renderExpenses() {
-        //     expenseTableBody.innerHTML = '';
-
-        //     expenses.forEach(expense => {
-        //         const row = document.createElement('tr');
-
-        //         row.innerHTML = `
-    //             <td>${new Date(expense.date).toLocaleDateString()}</td>
-    //             <td>${expense.category}</td>
-    //             <td>${expense.description}</td>
-    //             <td>${formatCurrency(expense.amount)}</td>
-    //             <td class="action-cell">
-    //                 <button class="edit-btn" data-id="${expense.id}">
-    //                     <i class="fas fa-edit"></i>
-    //                 </button>
-    //                 <button class="delete-btn" data-id="${expense.id}">
-    //                     <i class="fas fa-trash"></i>
-    //                 </button>
-    //             </td>
-    //         `;
-
-        //         expenseTableBody.appendChild(row);
-        //     });
-
-        //     // Add event listeners to edit and delete buttons
-        //     document.querySelectorAll('.edit-btn').forEach(btn => {
-        //         btn.addEventListener('click', (e) => {
-        //             const id = parseInt(e.currentTarget.getAttribute('data-id'));
-        //             editExpense(id);
-        //         });
-        //     });
-
-        //     document.querySelectorAll('.delete-btn').forEach(btn => {
-        //         btn.addEventListener('click', (e) => {
-        //             const id = parseInt(e.currentTarget.getAttribute('data-id'));
-        //             deleteExpense(id);
-        //         });
-        //     });
-
-        //     updateTotals();
-        // }
-
-
         // load expense with api 
        function loadExpenses() {
     const expenseTableBody = $("#expenseTableBody");
@@ -1130,7 +1116,7 @@
                                 <button class="edit-btn" data-id="${expense.expense_id}">
                                     <i class="fas fa-edit"></i>
                                 </button>
-                                <button class="delete-btn" data-id="${expense.expense_id}">
+                                <button class="delete-btn" id="demoButton" data-id="${expense.expense_id}">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </td>
@@ -1181,7 +1167,7 @@ $(document).ready(function() {
         function deleteExpense(id) {
             if (confirm('Are you sure you want to delete this expense?')) {
                 expenses = expenses.filter(exp => exp.id !== id);
-                renderExpenses();
+                // renderExpenses();
             }
         }
 
@@ -1216,7 +1202,7 @@ $(document).ready(function() {
                 });
             }
 
-            renderExpenses();
+            // renderExpenses();
             expenseModal.style.display = 'none';
         }
 
@@ -1235,7 +1221,7 @@ $(document).ready(function() {
 
         // Initialize the page
         document.addEventListener('DOMContentLoaded', () => {
-            renderExpenses();
+            // renderExpenses();
 
             // Set today's date as default for new expenses
             const today = new Date().toISOString().split('T')[0];
@@ -1281,7 +1267,7 @@ $(document).ready(function() {
                     }
                 }
 
-                // convertedBudget = convertedBudget.toFixed(2);
+                convertedBudget = convertedBudget.toFixed(0);
 
                 console.log(`Budget in ${tripCurrency}: ${convertedBudget}`);
 
@@ -1320,11 +1306,10 @@ $(document).ready(function() {
                     headers: {
                         "X-CSRF-TOKEN": "{{ csrf_token() }}" // only needed if hitting web.php, not api.php
                     },
+                    
                     success: function(response) {
-                        $('#responseMessage').html(
-                            `<p style="color:green;">${response.message}</p>`
-                        );
-                        console.log("Expense added:", response.data);
+                       toastr.success("Success" , "Expense Has Been Added")
+                       $('#saveExp').text('Adding...')
                         $('#expenseForm')[0].reset(); // clear form
                         expenseModal.style.display = 'none'
                         loadExpenses();
@@ -1345,8 +1330,86 @@ $(document).ready(function() {
                             );
                         }
                     }
+                    ,
+    complete: function(xhr, status) {
+        $('#saveExp').text('Add Expense');
+        // This runs whether success OR error
+    }
                 });
             });
         });
     </script>
+
+{{-- ============ Delete Modal js ============  --}}
+<script>
+$(document).ready(function() {
+    const deleteModal = $('#deleteModal');
+    
+    // Use event delegation for dynamic demo buttons
+    $(document).on('click', '#demoButton, .demo-button', function() {
+        deleteModal.css('display', 'flex');
+    });
+    
+    // Close modal functions
+    const closeModal = function() {
+        deleteModal.hide();
+    };
+    
+    $('#closeDeleteModal, #cancelDelete').on('click', closeModal);
+        
+    // Close modal when clicking outside
+    $(window).on('click', function(event) {
+        if (event.target === deleteModal[0]) {
+            closeModal();
+        }
+    });
+});
+</script>
+
+{{-- =============== DELETE EXPENSE ============  --}}
+<script>
+       
+    let expID = null;
+
+   $(document).on('click', '#demoButton', function(){
+    let itemId = $(this).data('id');
+    console.log(itemId);
+    expID = itemId
+});
+
+$(document).on('click', '#confirmDelete', function() {
+    // alert('clicked on delete');
+    $.ajax({
+        url: "/delTrip/" + expID,
+        type: 'DELETE', // or 'POST' if you are using POST
+        data: {
+            _token: $('meta[name="csrf-token"]').attr('content') // only for Laravel
+        },
+        success: function(response) {
+            // alert('Expense deleted');
+            // closeModal();
+            toastr.success('Successful', 'Expense Deleted!');
+             $("#deleteModal").hide();
+            loadExpenses();
+            $('#confirmDelete').html('Deleting...')
+            $('#confirmDelete').prop('disabled', true);
+            // loadExpenses()
+            // optionally remove the row from DOM:
+            // $('#row-' + expID).remove();
+        },
+        error: function(xhr) {
+            alert('Error deleting expense!');
+            console.log(xhr.responseText);
+        }
+        , 
+        complete: function(){
+            $('#confirmDelete').html('<i class="fas fa-trash"></i> Delete')
+            $('#confirmDelete').prop('disabled', false);
+        }
+    });
+});
+
+
+</script>
+
 @endsection

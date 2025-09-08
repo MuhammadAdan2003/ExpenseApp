@@ -44,7 +44,6 @@ Route::post('/trips', [TripController::class, 'store'])->name('tripstore');
 Route::get('/mytrip/{id}', [TripController::class, 'trip'])->name('myttrip');
 
 
-
 Route::post('/signup', [AuthController::class, 'register'])->name('signup');
 Route::post('/signin', [AuthController::class, 'login'])->name('loginn');
 Route::get('/logout', [AuthController::class, 'logout'])->name('logouts');
@@ -52,3 +51,4 @@ Route::get('/logout', [AuthController::class, 'logout'])->name('logouts');
 
 Route::post('addExp', [ExpenseController::class , 'addExp'])->name('addingExp');
 Route::get('getExp/{trip_id}', [ExpenseController::class , 'exp'])->name('gettingExp');
+Route::delete('/delTrip/{expense_id}' , [ExpenseController::class , 'destroy'])->name('deleteExp');

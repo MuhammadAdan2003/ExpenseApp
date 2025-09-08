@@ -77,7 +77,7 @@ class ExpenseController extends Controller
             );
         }
     }
-
+    
     public function exp($trip_id)
     {
         $expenses = Expenses::where('trip_id', $trip_id)->get();
@@ -85,5 +85,24 @@ class ExpenseController extends Controller
             'success' => true,
             'expenses' => $expenses,
         ]);
+    }
+
+    public function destroy($expense_id)
+    {
+        $exp = Expenses::where('expense_id', $expense_id)
+                     ->where('user_id', Auth::id()) // ensure user owns the trip
+                     ->first();
+
+        if (!$exp) {
+            return response()->json([
+                'message' => 'Trip not found or unauthorized'
+            ], 404);
+        }
+
+        $exp->delete();
+
+        return response()->json([
+            'message' => 'Trip Deleted successfully'
+        ], 200);
     }
 }

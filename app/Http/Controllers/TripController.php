@@ -22,7 +22,8 @@ class TripController extends Controller
 
     public function trips()
     {
-        $trips = Trips::all();
+       $trips = Trips::where('user_id', Auth::id())->get();
+
 
         return view('Users.User_pages.trips', compact('trips'));
     }
@@ -666,7 +667,7 @@ class TripController extends Controller
             'start_date' => $validated['start_date'],
             'end_date' => $validated['end_date'],
             'budget' => $validated['budget'],
-            'remaining_budget' => $validated['budget'],
+            'remaining_budget' => $request->remaining_budget,
             'currency' => $validated['currency'],
             'trip_image' => $randomImage,
             'description' => $validated['description'] ?? null
@@ -675,7 +676,12 @@ class TripController extends Controller
         return response()->json([
             'success' => true,
             'trip' => $trip,
-            'message' => 'Trip created successfully!'
+            'message' => 'Trip created successfully!',
+            'redirect_url' => route('showtrips')
         ]);
     }
+
+    // public function destroy(){
+
+    // }
 }

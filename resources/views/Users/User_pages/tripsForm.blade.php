@@ -273,6 +273,8 @@
                 <div class="form-group">
                     <label for="trip-budget">Budget</label>
                     <input name="budget" type="number" id="trip-budget" class="form-control">
+                    <input name="remaining_budget" type="number" style="display: none" id="trip-budget-Remain"
+                        class="form-control">
                 </div>
 
                 <div class="form-group">
@@ -282,8 +284,8 @@
             </div>
 
             <div class="form-group full-width">
-                <label name="description" for="trip-description">Description</label>
-                <textarea id="trip-description" class="form-control" placeholder="Tell us about this trip..." rows="5"></textarea>
+                <label  for="trip-description">Description</label>
+                <textarea name="description" id="trip-description" class="form-control" placeholder="Tell us about this trip..." rows="5"></textarea>
             </div>
 
             <button type="submit" class="submit-btn">
@@ -350,40 +352,70 @@
             $('#tripForm').on('submit', function(e) {
                 e.preventDefault();
 
-                let form = $(this);
-                let formData = form.serialize();
+                const userCurrency = "{{ Auth::user()->user_currency }}";
+                const budget = $('#trip-budget').val();
+                const tripCurrency = $('#trip-currency').val();
+                const form = $(this);
 
-                $.ajax({
-                    url: "{{ route('tripstore') }}",
-                    method: "POST",
-                    data: formData,
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    beforeSend: function() {
-                        form.find('button[type="submit"]').prop('disabled', true).text(
-                            'Saving...');
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            toastr.success('Success', response.message);
-                            form[0].reset();
+                fetch('https://open.er-api.com/v6/latest/' + userCurrency)
+                    .then(response => response.json())
+                    .then(data => {
+                        const rates = data.rates;
+                        let convertedBudget;
+
+                        if (tripCurrency === userCurrency) {
+                            convertedBudget = budget;
+                        } else {
+                            const rate = rates[tripCurrency];
+                            convertedBudget = rate ? budget * rate : budget;
                         }
-                    },
-                    error: function(xhr) {
-                        let errors = xhr.responseJSON.errors;
-                        let errorMessage = "Something went wrong!";
-                        if (errors) {
-                            errorMessage = Object.values(errors).map(err => err[0]).join(
-                                '<br>');
-                        }
-                        toastr.error('Error', errorMessage);
-                    },
-                    complete: function() {
-                        form.find('button[type="submit"]').prop('disabled', false).text(
-                            'Create Trip');
-                    }
-                });
+
+                        convertedBudget = convertedBudget.toFixed(0);
+                        $('#trip-budget-Remain').val(convertedBudget);
+
+                        // ✅ Now submit AJAX after conversion is done
+                        let formData = form.serialize();
+
+                        $.ajax({
+                            url: "{{ route('tripstore') }}",
+                            method: "POST",
+                            data: formData,
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            beforeSend: function() {
+                                form.find('button[type="submit"]').prop('disabled', true)
+                                    .text('Saving...');
+                            },
+                            success: function(response) {
+                                if (response.success) {
+                                    toastr.success('Success', response.message);
+                                    form[0].reset();
+                                    setTimeout(() => {
+                                        window.location.href = response
+                                        .redirect_url;
+                                    }, 2000);
+                                }
+                            },
+                            error: function(xhr) {
+                                let errors = xhr.responseJSON.errors;
+                                let errorMessage = "Something went wrong!";
+                                if (errors) {
+                                    errorMessage = Object.values(errors).map(err => err[0])
+                                        .join('<br>');
+                                }
+                                toastr.error('Error', errorMessage);
+                            },
+                            complete: function() {
+                                form.find('button[type="submit"]').prop('disabled', false)
+                                    .text('Create Trip');
+                            }
+                        });
+                    })
+                    .catch(error => {
+                        console.error(error);
+                        toastr.error('Error', 'Currency conversion failed!');
+                    });
             });
 
             // function showToast(toastId, message) {

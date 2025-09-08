@@ -35,7 +35,7 @@
         }
 
         .trip-card:hover {
-            transform: translateY(-10px);
+            /* transform: translateY(-10px); */
             box-shadow: 0 10px 25px var(--primary),
                 0 15px 35px rgba(67, 97, 238, 0.3),
                 0 20px 45px rgba(67, 97, 238, 0.2);
@@ -145,7 +145,7 @@
             animation: fadeInUp 0.6s ease forwards 0.6s;
         }
 
-        @keyframes fadeInUp {
+        /* @keyframes fadeInUp {
             from {
                 opacity: 1;
                 transform: translateY(50px);
@@ -155,7 +155,7 @@
                 opacity: 1;
                 transform: translateY(0);
             }
-        }
+        } */
 
         /* Responsive adjustments */
         @media (max-width: 768px) {
