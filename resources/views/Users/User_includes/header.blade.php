@@ -73,25 +73,22 @@
                 <div class="image-preview" id="imagePreview">
                     <img src="{{ Auth::check() && Auth::user()->image ? asset('assets/img/' . Auth::user()->image) : '' }}"
                         alt="">
-
-                    {{-- <img src="" alt=""> --}}
-                    {{-- <img src="" alt=""> --}}
                 </div>
                 <div class="mt-4">
-                    <h3>Welcome Adan</h3>
+                    <h3>Welcome {{ Auth::user()->fname }}</h3>
                 </div>
             </div>
 
             <div class="d-flex flex-column mt-4 flex-shrink-0 p-3 h-100">
                 <ul class="nav nav-pills flex-column mb-auto">
                     <li class="nav-item">
-                        <a href="{{ route('dashboard') }}" class="nav-link active">
+                        <a href="{{ route('dashboard') }}" class="nav-link  {{ request()->routeIs('dashboard') ? 'active' : '' }}">
                             <i class="fas fa-tachometer-alt me-2"></i>
                             Dashboard
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('showtrips') }}" class="nav-link text-light ">
+                        <a href="{{ route('showtrips') }}" class="nav-link text-light {{ request()->routeIs('showtrips') ? 'active' : '' }}">
                             <i class="fas fa-wallet me-2"></i>
                             Trips
                         </a>
@@ -123,4 +120,4 @@
                 </ul>
             </div>
         </div>
-        <main class="main-content">
+        <main class="main-content"> 

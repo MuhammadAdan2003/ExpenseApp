@@ -125,7 +125,7 @@
 
                 <div class="col-12">
                     <div class="login-link">
-                        Already have an account? <a href="login.html">Sign in</a>
+                        Already have an account? <a href="{{ route('showLogin') }}">Sign in</a>
                     </div>
                 </div>
             </div>

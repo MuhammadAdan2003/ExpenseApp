@@ -22,12 +22,12 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="{{ asset('assets/js/toastr.js') }}"></script>
 <script>
-    document.querySelectorAll('.nav-link').forEach(link => {
-  link.addEventListener('click', function() {
-    document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
-    this.classList.add('active');
-  });
-});
+//     document.querySelectorAll('.nav-link').forEach(link => {
+//   link.addEventListener('click', function() {
+//     document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
+//     this.classList.add('active');
+//   });
+// });
 
 </script>
 @yield('bottomScriptsCustom')

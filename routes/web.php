@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TripController;
 use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\budgetController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -49,3 +50,7 @@ Route::get('/logout', [AuthController::class, 'logout'])->name('logouts');
 Route::post('addExp', [ExpenseController::class , 'addExp'])->name('addingExp');
 Route::get('getExp/{trip_id}', [ExpenseController::class , 'exp'])->name('gettingExp');
 Route::delete('/delTrip/{expense_id}' , [ExpenseController::class , 'destroy'])->name('deleteExp');
+
+
+// ============= BUDGET ROUTES ============ //
+Route::get('/remaining' ,[budgetController::class , 'insertExpense'])->name('getRemain');

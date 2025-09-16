@@ -13,7 +13,7 @@ class ExpenseController extends Controller
     {
         try {
             // Validate incoming request
-            $validated = $req->validate([
+            $validated = $req->validate([ 
                 'amount' => 'required|integer',
                 'category' => 'required|string',
                 'expense_date' => 'required|date',
@@ -21,7 +21,7 @@ class ExpenseController extends Controller
                 'trip_id' => 'nullable',
             ]);
 
-             $trip = Trips::find($validated['trip_id']);
+            $trip = Trips::find($validated['trip_id']);
             // Add user_id from logged in user
             $validated['user_id'] = auth()->id();
 
@@ -30,11 +30,10 @@ class ExpenseController extends Controller
             if ($validated['amount'] > $trip->remaining_budget) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Budget khatm ho gaya hai.',
+                    'message' => 'The budget is insufficient to cover this expense.',
                 ]);
             }
-
-           
+                
             // Expense create
             $expense = Expenses::create($validated);
 
@@ -42,11 +41,11 @@ class ExpenseController extends Controller
             $trip->remaining_budget = $trip->remaining_budget - $validated['amount'];
             $trip->save();
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Expense added successfully.',
-                'remaining_budget' => $trip->remaining_budget,
-            ]);
+            // return response()->json([
+            //     'success' => true,
+            //     'message' => 'Expense added successfully.',
+            //     'remaining_budget' => $trip->remaining_budget,
+            // ]);
 
             // dd($currRemain);
             return response()->json(
@@ -54,6 +53,7 @@ class ExpenseController extends Controller
                     'success' => true,
                     'message' => 'Expense added successfully!',
                     'data' => $expense,
+                    'remaining_budget' => $trip->remaining_budget
                 ],
                 200,
             ); // 201 = Created
@@ -77,32 +77,50 @@ class ExpenseController extends Controller
             );
         }
     }
-    
+
     public function exp($trip_id)
     {
         $expenses = Expenses::where('trip_id', $trip_id)->get();
+        // $trip = Trips::where('trip_id' , $trip_id)->get();
+        $remaining_budget = Trips::where('trip_id', $trip_id)
+            ->value('remaining_budget');
+        
+
         return response()->json([
             'success' => true,
             'expenses' => $expenses,
+            'remaining_budget' => $remaining_budget
         ]);
     }
 
     public function destroy($expense_id)
     {
         $exp = Expenses::where('expense_id', $expense_id)
-                     ->where('user_id', Auth::id()) // ensure user owns the trip
-                     ->first();
+            ->where('user_id', Auth::id()) // ensure user owns the trip
+            ->first();
 
         if (!$exp) {
-            return response()->json([
-                'message' => 'Trip not found or unauthorized'
-            ], 404);
+            return response()->json(
+                [
+                    'message' => 'Trip not found or unauthorized',
+                ],
+                404,
+            );
         }
 
+        $trip = Trips::find($exp->trip_id);
+
+        $trip->remaining_budget += $exp->amount;
+        $trip->save();
+        // dd($trip);
         $exp->delete();
 
-        return response()->json([
-            'message' => 'Trip Deleted successfully'
-        ], 200);
+        return response()->json(
+            [
+                'message' => 'Trip Deleted successfully',
+                'remaining_budget' => $trip->remaining_budget,
+            ],
+            200,
+        );
     }
 }

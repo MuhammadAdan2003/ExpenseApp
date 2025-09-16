@@ -1,7 +1,7 @@
 @extends('Users.user_layout.userlayout')
 
 @section('style')
- {{-- <link rel="stylesheet" href="assets/css/toastr.css"> --}}
+    {{-- <link rel="stylesheet" href="assets/css/toastr.css"> --}}
 
     <style>
         :root {
@@ -395,9 +395,9 @@
 
             100% {
                 box-shadow: 0 0 20px rgba(67, 97, 238, 0.8),
-                0 0 30px rgba(67, 97, 238, 0.6),
-                0 0 45px rgba(67, 97, 238, 0.4),
-                0 0 60px rgba(67, 97, 238, 0.2);
+                    0 0 30px rgba(67, 97, 238, 0.6),
+                    0 0 45px rgba(67, 97, 238, 0.4),
+                    0 0 60px rgba(67, 97, 238, 0.2);
             }
         }
 
@@ -865,10 +865,11 @@
             <div class="detail-card">
                 <h3>💰 Remaining budget</h3>
                 <div class="detail-content">
-                    <div id="changeRemain" class="budget-display">{{ $trip->budget . ' ' . Auth::user()->user_currency }}</div>
+                    <div id="changeRemain" class="budget-display">{{ $trip->budget . ' ' . Auth::user()->user_currency }}
+                    </div>
                 </div>
                 <div class="detail-content">
-                    <div class="budget-display converted">{{ $trip->budget . ' ' . $trip->currency }}</div>
+                    <div id="newRemain" class="budget-display"></div>
                 </div>
             </div>
         </div>
@@ -897,34 +898,17 @@
                             Loading...
                         </td>
                     </tr>
-                    <!-- Expenses will be added here dynamically -->
 
-                    {{-- @foreach ($tripExpenses as $exp)
-                        <tr>
-                            <td>{{ $exp->expense_date }}</td>
-                            <td>{{ $exp->category }}</td>
-                            <td>{{ $exp->notes }}</td>
-                            <td>{{ $exp->amount }}</td>
-                            <td>{{ $exp->amount }}</td>
-                            <td class="action-cell">
-                                <button class="edit-btn" data-id="${expense.id}">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="delete-btn" data-id="${expense.id}">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    @endforeach --}}
                 </tbody>
             </table>
 
             <div class="expense-summary">
                 <div class="total-expenses">
-                    Total Expenses: <span id="totalExpenses">$0.00</span>
+                    {{-- Total Expenses: <span id="totalExpenses">$0.00</span> --}}
+
                 </div>
                 <div class="remaining-budget">
-                    Remaining Budget: <span id="remainingBudget">$2,500.00</span>
+                    {{-- Remaining Budget: <span id="remainingBudget">$2,500.00</span> --}}
                 </div>
             </div>
         </div>
@@ -999,58 +983,33 @@
     </div>
 
     {{-- Delete modal  --}}
-     <!-- Delete Confirmation Modal -->
-        <div class="modal" id="deleteModal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title">Confirm Deletion</h3>
-                    <button class="close-btn" id="closeDeleteModal">&times;</button>
+    <!-- Delete Confirmation Modal -->
+    <div class="modal" id="deleteModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Confirm Deletion</h3>
+                <button class="close-btn" id="closeDeleteModal">&times;</button>
+            </div>
+            <div class="delete-modal-content">
+                <div class="delete-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
                 </div>
-                <div class="delete-modal-content">
-                    <div class="delete-icon">
-                        <i class="fas fa-exclamation-triangle"></i>
-                    </div>
-                    <p class="delete-message">Are you sure you want to delete this expense? This action cannot be undone.</p>                    
-                    <div class="form-actions">
-                        <button type="button" class="action-btn secondary-btn" id="cancelDelete">Cancel</button>
-                        <button type="button" class="action-btn danger-btn" id="confirmDelete">
-                            <i class="fas fa-trash"></i> Delete
-                        </button>
-                    </div>
+                <p class="delete-message">Are you sure you want to delete this expense? This action cannot be undone.</p>
+                <div class="form-actions">
+                    <button type="button" class="action-btn secondary-btn" id="cancelDelete">Cancel</button>
+                    <button type="button" class="action-btn danger-btn" id="confirmDelete">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
                 </div>
             </div>
         </div>
     </div>
+    </div>
 @endsection
 @section('bottomScriptsCustom')
-{{-- <script src="assets/js/toastr.js"></script> --}}
+    {{-- <script src="assets/js/toastr.js"></script> --}}
     <script>
-         
         const toastr = new Toastr();
-
-        // Sample expense data
-        let expenses = [{
-                id: 1,
-                date: '2023-06-15',
-                category: 'Transportation',
-                description: 'Flight to Zurich',
-                amount: 750.00
-            },
-            {
-                id: 2,
-                date: '2023-06-16',
-                category: 'Accommodation',
-                description: 'Hotel in Zurich',
-                amount: 120.00
-            },
-            {
-                id: 3,
-                date: '2023-06-17',
-                category: 'Food',
-                description: 'Restaurant dinner',
-                amount: 45.50
-            }
-        ];
 
         // DOM elements
         const expenseTableBody = document.getElementById('expenseTableBody');
@@ -1078,35 +1037,69 @@
                 currency: 'USD'
             }).format(amount);
         }
-
-        // Calculate and update totals
-        function updateTotals() {
-            const total = expenses.reduce((sum, expense) => sum + expense.amount, 0);
-            totalExpensesElement.textContent = formatCurrency(total);
-            remainingBudgetElement.textContent = formatCurrency(TOTAL_BUDGET - total);
-        }
-
+        
         // load expense with api 
-       function loadExpenses() {
-    const expenseTableBody = $("#expenseTableBody");
-    let tripID = "{{ $trip->trip_id }}"; // Blade variable
+        function loadExpenses() {
+            const expenseTableBody = $("#expenseTableBody");
+            let tripID = "{{ $trip->trip_id }}"; // Blade variable
 
-    // Show loader row inside tbody
-    expenseTableBody.html(`
+            // Show loader row inside tbody
+            expenseTableBody.html(`
         <tr>
             <td colspan="5" class="text-center">Loading...</td>
         </tr>
     `);
 
-    $.ajax({
-        url: "/getExp/" + tripID, // ✅ trip_id pass in URL
-        type: "GET",
-        success: function(data) {
-            expenseTableBody.empty(); // clear loader
+            $.ajax({
+                url: "/getExp/" + tripID, // ✅ trip_id pass in URL
+                type: "GET",
+                success: function(data) {
+                    expenseTableBody.empty(); // clear loader
+                    let total = data.expenses.reduce((sum, exp) => Number(sum) + Number(exp.amount), 0);
+                    //    console.log( "total" + " " + total);
+                    $('.total-expenses').text(`Total Expenses Amount: ${total} {{ $trip->currency }} `);
+                    $('.remaining-budget').text("Remaining Budget: " + " " + data.remaining_budget + " " +
+                        "{{ $trip->currency }}")
 
-            if (data.success && data.expenses.length > 0) {
-                data.expenses.reverse().forEach(function(expense) {
-                    let row = `
+                    $('#newRemain').text(data.remaining_budget + " " + "{{ $trip->currency }}");
+
+
+
+        const tripCurrency = "{{ $trip->currency }}"; // e.g., "INR"
+        const userCurrency = "{{ Auth::user()->user_currency }}"; // e.g., "USD"
+        const budget = "{{ $trip->budget }}"
+        // Fetch exchange rates based on USD as base
+         fetch('https://open.er-api.com/v6/latest/' + tripCurrency)
+                .then(response => response.json())
+                .then(rateData => {
+                    const rates = rateData.rates;
+                    if (tripCurrency === userCurrency) {
+                        $('#changeRemain').text(
+                            `Remaining Budget (Your Currency): ${data.remaining_budget} ${userCurrency}`
+                        );
+                    } else {
+                        const rate = rates[userCurrency];
+                        if (rate) {
+                            const convertedRemaining = (data.remaining_budget * rate).toFixed(0);
+                            $('#changeRemain').text(
+                                `${convertedRemaining} ${userCurrency}`
+                            );
+                        } else {
+                            $('.remaining-budget-converted').text("Conversion rate not available");
+                        }
+                    }
+                });
+
+
+
+
+
+
+
+
+                    if (data.success && data.expenses.length > 0) {
+                        data.expenses.reverse().forEach(function(expense) {
+                            let row = `
                         <tr>
                             <td>${new Date(expense.expense_date).toLocaleDateString()}</td>
                             <td>${expense.category}</td>
@@ -1122,22 +1115,25 @@
                             </td>
                         </tr>
                     `;
-                    expenseTableBody.append(row);
-                });
-            } else {
-                expenseTableBody.html('<tr><td colspan="5" class="text-center">No expenses found</td></tr>');
-            }
-        },
-        error: function() {
-            expenseTableBody.html('<tr><td colspan="5" class="text-center text-danger">Error loading expenses</td></tr>');
+                            expenseTableBody.append(row);
+                        });
+                    } else {
+                        expenseTableBody.html(
+                            '<tr><td colspan="5" class="text-center">No expenses found</td></tr>');
+                    }
+                },
+                error: function() {
+                    expenseTableBody.html(
+                        '<tr><td colspan="5" class="text-center text-danger">Error loading expenses</td></tr>'
+                        );
+                }
+            });
         }
-    });
-}
 
-// ✅ Call on page load
-$(document).ready(function() {
-    loadExpenses();
-});
+        // ✅ Call on page load
+        $(document).ready(function() {
+            loadExpenses();
+        });
 
         // Open modal for adding new expense
         function openAddModal() {
@@ -1240,8 +1236,10 @@ $(document).ready(function() {
                 alert(`Action: ${action}`);
             });
         });
+        
     </script>
     <script>
+        // function ChangingINCurr(){
         // Trip and user currencies from PHP
         const tripCurrency = "{{ $trip->currency }}"; // e.g., "INR"
         const userCurrency = "{{ Auth::user()->user_currency }}"; // e.g., "USD"
@@ -1267,7 +1265,8 @@ $(document).ready(function() {
                     }
                 }
 
-                convertedBudget = convertedBudget.toFixed(0);
+
+                convertedBudget = convertedBudget.toFixed(2);
 
                 console.log(`Budget in ${tripCurrency}: ${convertedBudget}`);
 
@@ -1278,6 +1277,8 @@ $(document).ready(function() {
                 });
             })
             .catch(error => console.error(error));
+        // }
+        // ChangingINCurr();        
     </script>
 
     <script>
@@ -1293,12 +1294,13 @@ $(document).ready(function() {
             });
         });
     </script>
-
+    {{-- =========== SAVE EXPENSES =============  --}}
     <script>
         $(document).ready(function() {
+
             $('#expenseForm').on('submit', function(e) {
                 e.preventDefault(); // prevent default form submit
-
+                $('#saveExp').text('Adding...')
                 $.ajax({
                     url: "{{ route('addingExp') }}", // your API endpoint
                     type: "POST",
@@ -1306,14 +1308,18 @@ $(document).ready(function() {
                     headers: {
                         "X-CSRF-TOKEN": "{{ csrf_token() }}" // only needed if hitting web.php, not api.php
                     },
-                    
+
                     success: function(response) {
-                       toastr.success("Success" , "Expense Has Been Added")
-                       $('#saveExp').text('Adding...')
+                        if (response.success) {
+                        toastr.success("Success", "Expense Has Been Added")
                         $('#expenseForm')[0].reset(); // clear form
                         expenseModal.style.display = 'none'
-                        loadExpenses();
-                        $('#changeRemain').text(response.remaining_budget);    
+                        loadExpenses();    
+                        }
+                        else{
+                            toastr.error("Error", response.message);
+                        }                                                
+                        // $('#newRemain').text(response.remaining_budget);    
                     },
                     error: function(xhr) {
                         let res = xhr.responseJSON;
@@ -1329,87 +1335,79 @@ $(document).ready(function() {
                                 `<p style="color:red;">${res.message || 'Something went wrong'}</p>`
                             );
                         }
+                    },
+                    complete: function(xhr, status) {
+                        $('#saveExp').text('Add Expense');
+                        // This runs whether success OR error
                     }
-                    ,
-    complete: function(xhr, status) {
-        $('#saveExp').text('Add Expense');
-        // This runs whether success OR error
-    }
                 });
             });
         });
     </script>
 
-{{-- ============ Delete Modal js ============  --}}
-<script>
-$(document).ready(function() {
-    const deleteModal = $('#deleteModal');
-    
-    // Use event delegation for dynamic demo buttons
-    $(document).on('click', '#demoButton, .demo-button', function() {
-        deleteModal.css('display', 'flex');
-    });
-    
-    // Close modal functions
-    const closeModal = function() {
-        deleteModal.hide();
-    };
-    
-    $('#closeDeleteModal, #cancelDelete').on('click', closeModal);
-        
-    // Close modal when clicking outside
-    $(window).on('click', function(event) {
-        if (event.target === deleteModal[0]) {
-            closeModal();
-        }
-    });
-});
-</script>
+    {{-- ============ Delete Modal js ============  --}}
+    <script>
+        $(document).ready(function() {
+            const deleteModal = $('#deleteModal');
 
-{{-- =============== DELETE EXPENSE ============  --}}
-<script>
-       
-    let expID = null;
+            // Use event delegation for dynamic demo buttons
+            $(document).on('click', '#demoButton, .demo-button', function() {
+                deleteModal.css('display', 'flex');
+            });
 
-   $(document).on('click', '#demoButton', function(){
-    let itemId = $(this).data('id');
-    console.log(itemId);
-    expID = itemId
-});
+            // Close modal functions
+            const closeModal = function() {
+                deleteModal.hide();
+            };
 
-$(document).on('click', '#confirmDelete', function() {
-    // alert('clicked on delete');
-    $.ajax({
-        url: "/delTrip/" + expID,
-        type: 'DELETE', // or 'POST' if you are using POST
-        data: {
-            _token: $('meta[name="csrf-token"]').attr('content') // only for Laravel
-        },
-        success: function(response) {
-            // alert('Expense deleted');
-            // closeModal();
-            toastr.success('Successful', 'Expense Deleted!');
-             $("#deleteModal").hide();
-            loadExpenses();
-            $('#confirmDelete').html('Deleting...')
-            $('#confirmDelete').prop('disabled', true);
-            // loadExpenses()
-            // optionally remove the row from DOM:
-            // $('#row-' + expID).remove();
-        },
-        error: function(xhr) {
-            alert('Error deleting expense!');
-            console.log(xhr.responseText);
-        }
-        , 
-        complete: function(){
-            $('#confirmDelete').html('<i class="fas fa-trash"></i> Delete')
-            $('#confirmDelete').prop('disabled', false);
-        }
-    });
-});
+            $('#closeDeleteModal, #cancelDelete').on('click', closeModal);
 
+            // Close modal when clicking outside
+            $(window).on('click', function(event) {
+                if (event.target === deleteModal[0]) {
+                    closeModal();
+                }
+            });
+        });
+    </script>
 
-</script>
+    {{-- =============== DELETE EXPENSE ============  --}}
+    <script>
+        let expID = null;
+        $(document).on('click', '#demoButton', function() {
+            let itemId = $(this).data('id');
+            console.log(itemId);
+            expID = itemId
+        });
 
+        $(document).on('click', '#confirmDelete', function() {
+            // alert('clicked on delete');
+            $.ajax({
+                url: "/delTrip/" + expID,
+                type: 'DELETE', // or 'POST' if you are using POST
+                data: {
+                    _token: $('meta[name="csrf-token"]').attr('content') // only for Laravel
+                },
+                success: function(response) {
+                    // alert('Expense deleted');
+                    // closeModal();
+                    toastr.success('Successful', 'Expense Deleted!');
+                    // ChangingINCurr();
+                    $("#deleteModal").hide();
+                    loadExpenses();
+                    $('#confirmDelete').html('Deleting...')
+                    $('#confirmDelete').prop('disabled', true);
+                    // $('#newRemain').text(response.remaining_budget);           
+                },
+                error: function(xhr) {
+                    alert('Error deleting expense!');
+                    console.log(xhr.responseText);
+                },
+                complete: function() {
+                    $('#confirmDelete').html('<i class="fas fa-trash"></i> Delete')
+                    $('#confirmDelete').prop('disabled', false);
+                }
+            });
+        });
+    </script>
 @endsection

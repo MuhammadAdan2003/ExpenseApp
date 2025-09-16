@@ -369,7 +369,7 @@
                             const rate = rates[tripCurrency];
                             convertedBudget = rate ? budget * rate : budget;
                         }
-
+                        
                         convertedBudget = convertedBudget.toFixed(0);
                         $('#trip-budget-Remain').val(convertedBudget);
 
